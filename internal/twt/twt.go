@@ -34,7 +34,7 @@ func InitTwt(consumerToken, consumerSecret, accessToken, accessTokenSecret strin
 	}
 }
 
-func (t *Twt) Post(content string) (string, error) {
+func (t *Twt) PostTweet(content string) (string, error) {
 	if content == "" {
 		return "", errors.New("Content is empty. Please write a tweet")
 	}

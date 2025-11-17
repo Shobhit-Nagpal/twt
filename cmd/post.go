@@ -18,7 +18,7 @@ var postCmd = &cobra.Command{
 
 func postTweet(cmd *cobra.Command, args []string) {
 	description := strings.Join(args, " ")
-	id, err := x.Post(description)
+	id, err := x.PostTweet(description)
 	if err != nil {
 		log.Print(err)
 		os.Exit(1)
