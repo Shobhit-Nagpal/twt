@@ -6,7 +6,7 @@ A simple CLI tool to post tweets to X (Twitter) without leaving your terminal.
 
 ## Installation
 ```bash
-go install github.com/yourusername/twt@latest
+go install github.com/Shobhit-Nagpal/twt@latest
 ```
 
 Make sure `~/go/bin` is in your `PATH`.
