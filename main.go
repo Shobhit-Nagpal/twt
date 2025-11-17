@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/Shobhit-Nagpal/twt/internal/twt"
+	"github.com/dghubble/oauth1"
 	"github.com/joho/godotenv"
 )
 
@@ -20,8 +21,16 @@ func main() {
 	postPtr := flag.String("post", "", "tweet to post")
 	flag.Parse()
 
-	token := os.Getenv("BEARER_TOKEN")
-	twt := twt.InitTwt(token)
+	consumerKey := os.Getenv("API_KEY")
+	consumerSecret := os.Getenv("API_SECRET")
+
+	accessToken := os.Getenv("ACCESS_TOKEN")
+	accessSecret := os.Getenv("ACCESS_TOKEN_SECRET")
+
+	config := oauth1.NewConfig(consumerKey, consumerSecret)
+	token := oauth1.NewToken(accessToken, accessSecret)
+
+	twt := twt.InitTwt(config, token)
 
 	err := twt.Post(*postPtr)
 	if err != nil {

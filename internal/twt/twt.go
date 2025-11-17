@@ -1,13 +1,12 @@
 package twt
 
 import (
-	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 
-	twitter "github.com/g8rswimmer/go-twitter/v2"
+	"github.com/dghubble/go-twitter/twitter"
+	"github.com/dghubble/oauth1"
 )
 
 type Twt struct {
@@ -22,14 +21,9 @@ func (a authorize) Add(req *http.Request) {
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", a.Token))
 }
 
-func InitTwt(token string) *Twt {
-	client := &twitter.Client{
-		Authorizer: authorize{
-			Token: token,
-		},
-		Client: http.DefaultClient,
-		Host:   "https://api.twitter.com",
-	}
+func InitTwt(config *oauth1.Config, token *oauth1.Token) *Twt {
+	httpClient := config.Client(oauth1.NoContext, token)
+	client := twitter.NewClient(httpClient)
 
 	return &Twt{
 		client: client,
@@ -41,18 +35,11 @@ func (t *Twt) Post(content string) error {
 		return errors.New("Content is empty. Please write a tweet")
 	}
 
-	tweetReq := twitter.CreateTweetRequest{
-		Text: content,
-	}
-	resp, err := t.client.CreateTweet(context.Background(), tweetReq)
+	_, resp, err := t.client.Statuses.Update(content, nil)
 	if err != nil {
 		return err
 	}
 
-	enc, err := json.MarshalIndent(resp, "", "    ")
-	if err != nil {
-		return err
-	}
-	fmt.Println(string(enc))
+	fmt.Println(resp)
 	return nil
 }
