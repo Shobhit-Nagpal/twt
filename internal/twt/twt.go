@@ -6,7 +6,8 @@ import (
 	"net/http"
 
 	"github.com/dghubble/go-twitter/twitter"
-	"github.com/dghubble/oauth1"
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/clientcredentials"
 )
 
 type Twt struct {
@@ -21,8 +22,8 @@ func (a authorize) Add(req *http.Request) {
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", a.Token))
 }
 
-func InitTwt(config *oauth1.Config, token *oauth1.Token) *Twt {
-	httpClient := config.Client(oauth1.NoContext, token)
+func InitTwt(config *clientcredentials.Config) *Twt {
+	httpClient := config.Client(oauth2.NoContext)
 	client := twitter.NewClient(httpClient)
 
 	return &Twt{

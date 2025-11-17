@@ -6,8 +6,8 @@ import (
 	"os"
 
 	"github.com/Shobhit-Nagpal/twt/internal/twt"
-	"github.com/dghubble/oauth1"
 	"github.com/joho/godotenv"
+	"golang.org/x/oauth2/clientcredentials"
 )
 
 func init() {
@@ -21,20 +21,16 @@ func main() {
 	postPtr := flag.String("post", "", "tweet to post")
 	flag.Parse()
 
-	consumerKey := os.Getenv("API_KEY")
-	consumerSecret := os.Getenv("API_KEY_SECRET")
+	consumerKey := os.Getenv("CLIENT_ID")
+	consumerSecret := os.Getenv("CLIENT_SECRET")
 
-	accessToken := os.Getenv("ACCESS_TOKEN")
-	accessSecret := os.Getenv("ACCESS_TOKEN_SECRET")
-
-	if consumerKey == "" || consumerSecret == "" || accessToken == "" || accessSecret == "" {
-		log.Fatal("Consumer key/secret and Access token/secret required")
+	config := &clientcredentials.Config{
+		ClientID:     consumerKey,
+		ClientSecret: consumerSecret,
+		TokenURL:     "https://api.twitter.com/oauth2/token",
 	}
 
-	config := oauth1.NewConfig(consumerKey, consumerSecret)
-	token := oauth1.NewToken(accessToken, accessSecret)
-
-	twt := twt.InitTwt(config, token)
+	twt := twt.InitTwt(config)
 
 	err := twt.Post(*postPtr)
 	if err != nil {
