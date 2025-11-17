@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/Shobhit-Nagpal/twt/internal/twt"
-	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -40,12 +39,6 @@ func setupConfig() {
 }
 
 func setupDependencies() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Print("Error loading .env file")
-		os.Exit(1)
-	}
-
 	consumerToken := viper.GetString("API_KEY")
 	consumerTokenSecret := viper.GetString("API_KEY_SECRET")
 
