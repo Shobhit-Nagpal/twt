@@ -22,10 +22,14 @@ func main() {
 	flag.Parse()
 
 	consumerKey := os.Getenv("API_KEY")
-	consumerSecret := os.Getenv("API_SECRET")
+	consumerSecret := os.Getenv("API_KEY_SECRET")
 
 	accessToken := os.Getenv("ACCESS_TOKEN")
 	accessSecret := os.Getenv("ACCESS_TOKEN_SECRET")
+
+	if consumerKey == "" || consumerSecret == "" || accessToken == "" || accessSecret == "" {
+		log.Fatal("Consumer key/secret and Access token/secret required")
+	}
 
 	config := oauth1.NewConfig(consumerKey, consumerSecret)
 	token := oauth1.NewToken(accessToken, accessSecret)
