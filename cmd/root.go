@@ -7,6 +7,7 @@ import (
 	"github.com/Shobhit-Nagpal/twt/internal/twt"
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var x *twt.Twt
@@ -23,8 +24,19 @@ func init() {
 	// Add subcommands
 	rootCmd.AddCommand(postCmd)
 
+	// Setup config
+	setupConfig()
+
 	// Setup deps
 	setupDependencies()
+}
+
+func setupConfig() {
+	viper.SetConfigName("config")
+	viper.SetConfigType("json")
+	viper.AddConfigPath("$HOME/.config/twt")
+
+	viper.ReadInConfig()
 }
 
 func setupDependencies() {
@@ -34,19 +46,24 @@ func setupDependencies() {
 		os.Exit(1)
 	}
 
-	consumerToken := os.Getenv("API_KEY")
-	consumerTokenSecret := os.Getenv("API_KEY_SECRET")
+	consumerToken := viper.GetString("API_KEY")
+	consumerTokenSecret := viper.GetString("API_KEY_SECRET")
 
-	accessToken := os.Getenv("ACCESS_TOKEN")
-	accessTokenSecret := os.Getenv("ACCESS_TOKEN_SECRET")
+	accessToken := viper.GetString("ACCESS_TOKEN")
+	accessTokenSecret := viper.GetString("ACCESS_TOKEN_SECRET")
 
 	if consumerToken == "" || consumerTokenSecret == "" || accessToken == "" || accessTokenSecret == "" {
-		log.Print("Missing API or Access token/secret")
+		log.Print("Missing API or Access token/secret in config")
+		os.Exit(1)
+	}
+
+	username = viper.GetString("USERNAME")
+	if consumerToken == "" || consumerTokenSecret == "" || accessToken == "" || accessTokenSecret == "" {
+		log.Print("Missing username in config")
 		os.Exit(1)
 	}
 
 	x = twt.InitTwt(consumerToken, consumerTokenSecret, accessToken, accessTokenSecret)
-	username = "shbhtngpl"
 }
 
 func Execute() {
