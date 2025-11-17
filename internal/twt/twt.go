@@ -2,7 +2,6 @@ package twt
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -22,7 +21,7 @@ func (a *authorizer) Add(req *http.Request) {}
 func InitTwt(consumerToken, consumerSecret, accessToken, accessTokenSecret string) *Twt {
 	config := oauth1.NewConfig(consumerToken, consumerSecret)
 	httpClient := config.Client(oauth1.NoContext, &oauth1.Token{
-		Token: accessToken,
+		Token:       accessToken,
 		TokenSecret: accessTokenSecret,
 	})
 	client := &twitter.Client{
@@ -35,9 +34,9 @@ func InitTwt(consumerToken, consumerSecret, accessToken, accessTokenSecret strin
 	}
 }
 
-func (t *Twt) Post(content string) error {
+func (t *Twt) Post(content string) (string, error) {
 	if content == "" {
-		return errors.New("Content is empty. Please write a tweet")
+		return "", errors.New("Content is empty. Please write a tweet")
 	}
 
 	req := twitter.CreateTweetRequest{
@@ -47,13 +46,8 @@ func (t *Twt) Post(content string) error {
 
 	tweetResponse, err := t.client.CreateTweet(context.Background(), req)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	enc, err := json.MarshalIndent(tweetResponse, "", "    ")
-	if err != nil {
-		return err
-	}
-	fmt.Println(string(enc))
-	return nil
+	return tweetResponse.Tweet.ID, nil
 }
