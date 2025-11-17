@@ -3,7 +3,6 @@ package twt
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/dghubble/oauth1"
@@ -42,7 +41,6 @@ func (t *Twt) PostTweet(content string) (string, error) {
 	req := twitter.CreateTweetRequest{
 		Text: content,
 	}
-	fmt.Println("Callout to create tweet callout")
 
 	tweetResponse, err := t.client.CreateTweet(context.Background(), req)
 	if err != nil {
