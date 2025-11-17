@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -23,5 +24,5 @@ func postTweet(cmd *cobra.Command, args []string) {
 		log.Print(err)
 		os.Exit(1)
 	}
-	log.Printf("Tweeted! Check it out at https://x.com/%s/%s\n", username, id)
+	fmt.Printf("Tweeted! Check it out at https://x.com/%s/status/%s\n", username, id)
 }
